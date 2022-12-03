@@ -22,8 +22,6 @@ import java.util.Optional;
 @Controller
 @RequiredArgsConstructor
 public class BoardController {
-
-
     private final BoardService boardService;
 
     @GetMapping("/board")//게시판 전체 리스트(초기 화면)
@@ -51,7 +49,6 @@ public class BoardController {
         if (board.isEmpty()) {
             return new ResponseEntity(HttpStatus.BAD_REQUEST);
         }
-
         return new ResponseEntity(board.get(), HttpStatus.OK);
     }
 
