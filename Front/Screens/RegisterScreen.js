@@ -8,15 +8,52 @@ import {
   SafeAreaView,
   StyleSheet,
   TextInput,
+  ScrollView,
+  Alert,
 } from 'react-native';
 import UserIcon from '../assets/icons/UserIcon.png';
+import axios from 'axios'
 const RegisterScreen = ({navigation}) => {
-  const [StudentID, PutStudentID] = React.useState(null);
-  const [Nickname, PutNickname] = React.useState(null);
-  const [Overlap, PutOverlap] = React.useState(null);
+  const [StudentID, PutStudentID] = React.useState("default");
+  const [Nickname, PutNickname] = React.useState("default");
+  const [Pwd, PutPwd] = React.useState("default");
+  const [Pwdd, PutPwdd] = React.useState("default");
   const [toggleCheckBox, setToggleCheckBox] = useState(false);
-
+  let status = false;
+  const regi = () => 
+  {
+    toggleCheckBox==true ? Tohome() : Alert.alert("약관 동의필요"); 
+    
+  };
+  const Tohome = () =>
+  {
+    status == true ? navigation.navigate('Home') :  Alert.alert("중복 여부를 확인해주세요");
+  }
+  const [post, setpost] = useState('post dummy');
+  async function Apiregister(){
+    axios.post("http://10.0.2.2:8080/join",
+    {
+      studentId:StudentID,
+      name:Nickname,
+      password:Pwd
+    })
+    .then(function(res){
+      
+      setTimeout(() => {
+        setpost(res.status);
+      }, 2000);
+      Alert.alert("가입 가능합니다")
+      status=true;
+    })
+    .catch(function(error){
+      setTimeout(() => {
+        setpost(error.status);
+      }, 2000);
+      Alert.alert("중복된 학번입니다")
+      status=false;
+})};
   return (
+    <ScrollView>
     <SafeAreaView style={Styles.Registerscreen}>
       <View style={{justifyContent: 'center', alignItems: 'center'}}>
         <Image
@@ -29,12 +66,15 @@ const RegisterScreen = ({navigation}) => {
         />
       </View>
       <View>
-        <View style={Styles.StudendIdContainer}>
+        <View >
           {/* <Text style={Styles.StudentId}>학번 입력</Text> */}
           <TextInput
-            style={Styles.input3}
+            style={Styles.input5}
             PutStudentID={PutStudentID}
-            value={StudentID}
+            onChangeText={(value) =>
+              {
+                PutStudentID(value);
+              }}
             placeholder="학번입력"
             placeholderTextColor="#808080"
             keyboardType="url"
@@ -47,75 +87,47 @@ const RegisterScreen = ({navigation}) => {
             placeholderTextColor="#ffffff"
             keyboardType="url"
           /> */}
-          <TouchableOpacity
-            style={{
-              height: 45,
-              width: 94,
-              borderWidth: 1,
-              borderRadius: 10,
-              backgroundColor: '#4B5965',
-              marginLeft: 10,
-              justifyContent: 'center',
-            }}>
-            <Text
-              style={{
-                color: 'white',
-                textAlign: 'center',
-                fontFamily: 'Inter-SemiBold',
-              }}>
-              중복 확인
-            </Text>
-          </TouchableOpacity>
+          
         </View>
       </View>
       <View>
-        <View style={Styles.NicknameContainer}>
+        <View >
           {/* <Text style={Styles.NickName}>닉네임 입력</Text> */}
           <TextInput
-            style={Styles.input4}
-            PutNickname={PutNickname}
-            value={Nickname}
-            placeholder="닉네임 입력"
+            style={Styles.input5}
+            secureTextEntry={true}
+            onChangeText={(value) =>
+              {
+                PutNickname(value);
+              }}
+            placeholder="이름 입력"
             placeholderTextColor="#808080"
             keyboardType="url"
           />
-          <TouchableOpacity
-            style={{
-              height: 45,
-              width: 94,
-              borderWidth: 1,
-              borderRadius: 10,
-              backgroundColor: '#4B5965',
-              marginLeft: 10,
-              justifyContent: 'center',
-            }}>
-            <Text
-              style={{
-                color: 'white',
-                textAlign: 'center',
-                fontFamily: 'Inter-SemiBold',
-              }}>
-              중복 확인
-            </Text>
-          </TouchableOpacity>
+          
         </View>
       </View>
       <View>
         <TextInput
           style={Styles.input5}
-          PutStudentID={PutStudentID}
-          value={StudentID}
+          secureTextEntry={true}
+          onChangeText={(value) =>
+            {
+              PutPwd(value);
+            }}
           placeholder="비밀번호 입력"
           placeholderTextColor="#808080"
-          keyboardType="url"
         />
         <TextInput
           style={Styles.input5}
-          PutStudentID={PutStudentID}
-          value={StudentID}
+          secureTextEntry={true}
+          onChangeText={(value) =>
+            {
+              PutPwdd(value);
+            }}
           placeholder="비밀번호 확인"
           placeholderTextColor="#808080"
-          keyboardType="url"
+          
         />
       </View>
       <View
@@ -132,9 +144,11 @@ const RegisterScreen = ({navigation}) => {
           onValueChange={newValue => setToggleCheckBox(newValue)}
         />
         <Text style={Styles.Terms}>약관 동의</Text>
+      
       </View>
+     
       <View style={Styles.TermsBox}>
-        <Text style={Styles.TermsBoxText}>ㅎㅇㅎㅇ</Text>
+        <Text style={Styles.TermsBoxText}>Demo</Text>
       </View>
       <View
         style={{
@@ -142,6 +156,26 @@ const RegisterScreen = ({navigation}) => {
           alignItems: 'center',
           margin: 18,
         }}>
+          <TouchableOpacity
+          onPress={Apiregister}
+            style={{
+              height: 45,
+              width: 94,
+              borderWidth: 1,
+              borderRadius: 10,
+              backgroundColor: '#4B5965',
+              marginLeft: 10,
+              justifyContent: 'center',
+            }}>
+            <Text
+              style={{
+                color: 'white',
+                textAlign: 'center',
+                fontFamily: 'Inter-SemiBold',
+              }}>
+              중복 확인
+            </Text>
+          </TouchableOpacity>
         <TouchableOpacity
           style={{
             borderWidth: 1,
@@ -153,7 +187,7 @@ const RegisterScreen = ({navigation}) => {
             alignItems: 'center',
             textAlign: 'center',
           }}
-          onPress={() => navigation.navigate('Home')}>
+          onPress={regi}>
           <Text
             style={{
               color: 'white',
@@ -165,6 +199,7 @@ const RegisterScreen = ({navigation}) => {
         </TouchableOpacity>
       </View>
     </SafeAreaView>
+    </ScrollView>
   );
 };
 
@@ -234,6 +269,7 @@ const Styles = StyleSheet.create({
     marginLeft: 10,
   },
   input5: {
+    
     borderWidth: 1,
     padding: 10,
     color: 'black',
@@ -245,6 +281,7 @@ const Styles = StyleSheet.create({
     marginLeft: 42,
     marginTop: 12,
     backgroundColor: 'white',
+    
   },
   CheckBox: {
     width: 20,
