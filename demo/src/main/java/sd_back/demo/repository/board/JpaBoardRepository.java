@@ -13,7 +13,6 @@ import java.util.List;
 
 public interface JpaBoardRepository extends JpaRepository<Board, Integer> {
     List<Board> findByMemberId(long memberId);
-
     List<Board> findByTitle(String title);
 
     @Transactional //데이터 수정/삭제 도중 에러 발생 시 롤백되도록 함
@@ -21,7 +20,6 @@ public interface JpaBoardRepository extends JpaRepository<Board, Integer> {
     @Query(value = "UPDATE Board b set b.title = :title, b.content = :content, b.date_time = :date_time where b.id= :id")
     void updateBoard(@Param("title") String title, @Param("content") String content
             , @Param("date_time") LocalDateTime date_time, @Param("id") int id);
-
 
     @Transactional
     @Modifying(clearAutomatically = true)
